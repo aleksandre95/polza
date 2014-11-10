@@ -12,10 +12,16 @@ package polza;
  */
 public class FlowGuiSolid extends javax.swing.JFrame {
 
-    /**
-     * Creates new form FlowGuiSolid
-     */
+    Control control;
+    String filename;
+    String word1;
+    String words2;
+    
+    
     public FlowGuiSolid() {
+        control = new Control();
+        filename = "words.txt";
+        
         initComponents();
     }
 
@@ -126,7 +132,12 @@ public class FlowGuiSolid extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void NewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewActionPerformed
-        // TODO add your handling code here:
+        word1 = Qword.getText();
+        words2 = Aword.getText();
+        control.add(word1, words2);
+        
+        control.save(filename);
+        //FileHandler.saveWords(null, filename);
     }//GEN-LAST:event_NewActionPerformed
 
     /**
