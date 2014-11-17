@@ -7,10 +7,13 @@
 package polza;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -18,48 +21,44 @@ import java.util.Scanner;
  */
 public class FileHandler {
 
-    public static ArrayList<String> load(String filename)
-    {
-        Scanner file_scanner = null;
-        ArrayList<String> stringArray = new ArrayList<String>();
-        filename = "words.txt";
-
+    public void save( HashMap<String, WordPair> maps, String filename) throws IOException{
+        
+        FileOutputStream file = new FileOutputStream(filename);
+        ObjectOutputStream fileOut = new ObjectOutputStream(file);
         try {
-            file_scanner = new Scanner(new File(filename));  //Connection to the file using the Scanner object
-        } catch (FileNotFoundException ex) {
-            System.out.println("Could not find the file to load from! Returning null.");
-            ex.printStackTrace();
-            return null;  //If something goes wrong the method returns null
+        fileOut.writeObject(maps);
+            
+        } catch (Exception e) {
+            System.out.println("Beautiful");
         }
-
-        while ( file_scanner.hasNextLine() ) {  //File found. Reading one line.             
-            stringArray.add( file_scanner.nextLine() );  //Reading in a single line and saving in the ArrayList
-        }
-
-        file_scanner.close(); 
-        //System.out.println(stringArray);//Closing the file
-        return stringArray;    //returning the arraylist
+        fileOut.close();
+        file.close();
+    
+    
+            
     }
-    public static boolean saveWords(ArrayList<String> stringArray, String filename)
-    {
-        if( stringArray == null ) { return false;  }  //Checking parameter for null.
-        FileWriter output;  //Creating reference for filewriter.
+    public HashMap<String, WordPair> load(String filename) throws IOException{
+      filename = "words.txt";
+      HashMap<String, WordPair> mapnew = new HashMap<String, WordPair>();
+      
+     FileInputStream filein = new FileInputStream(filename); 
+     ObjectInputStream objectin = new ObjectInputStream(filein);
         
         try {
-                output = new FileWriter(new File(filename));  //Opening connection to file.
-                for (String personline : stringArray) {   //running through the ArrayList.                    
-                    output.write(personline.toString() + "\n");  //Each String object is written as a line in file.
-            }
-
-            output.close();  //Closing the file
-        } catch (Exception ex) {  //If something goes wrong everything is send to system out.
-            System.out.println("Could not save to file!");
-            System.out.println(ex.toString());
-            ex.printStackTrace();
-            return false;  //If something goes wrong false is returned!
+            mapnew = (HashMap<String, WordPair>) objectin.readObject();
+            
+        } catch (ClassNotFoundException e) {
+            System.out.println("Class not found when loading");
+            e.getException();
         }
-
-        return true;
+        
+        filein.close();
+        objectin.close();
+        return mapnew;
+        
+        
+    
+        
     }
     
 }
